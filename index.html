@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Excel to Map - WebGIS</title>
+  <meta charset="utf-8" />
+  <style>
+    #map { height: 600px; width: 100%; margin-top: 10px; }
+  </style>
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+  <h2>Upload Excel (.xlsx) to Display Coordinates on Map</h2>
+  <input type="file" id="fileInput" accept=".xlsx" />
+
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- SheetJS for Excel parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script>
+    // Initialize Leaflet map
+    var map = L.map('map').setView([20, 0], 2); // center of world
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Handle Excel file upload
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        // Assume first sheet
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
+        jsonData.forEach(row => {
+          const lat = parseFloat(row.Latitude);
+          const lon = parseFloat(row.Longitude);
+          const name = row.Name || "Unnamed Point";
+
+          if (!isNaN(lat) && !isNaN(lon)) {
+            L.marker([lat, lon])
+              .addTo(map)
+              .bindPopup(`<b>${name}</b><br>Lat: ${lat}, Lon: ${lon}`);
+          }
+        });
+      };
+
+      reader.readAsArrayBuffer(file);
+    });
+  </script>
+</body>
+</html>
