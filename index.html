@@ -10,9 +10,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
-  <h2>Upload Excel (.xlsx) to Display Coordinates on Map</h2>
-  <input type="file" id="fileInput" accept=".xlsx" />
-
+  <h2>Auto-Loaded Excel Points on Map</h2>
   <div id="map"></div>
 
   <!-- Leaflet JS -->
@@ -22,22 +20,19 @@
 
   <script>
     // Initialize Leaflet map
-    var map = L.map('map').setView([20, 0], 2); // center of world
+    var map = L.map('map').setView([20, 0], 2);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Handle Excel file upload
-    document.getElementById('fileInput').addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (!file) return;
+    // Replace this URL with the raw GitHub file URL of your Excel file
+    const excelUrl = 'https://github.com/geraldrexhepi/basemap/locations.xlsx';
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-
-        // Assume first sheet
+    // Fetch the Excel file from GitHub
+    fetch(excelUrl)
+      .then(response => response.arrayBuffer())
+      .then(arrayBuffer => {
+        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(firstSheet);
 
@@ -52,10 +47,11 @@
               .bindPopup(`<b>${name}</b><br>Lat: ${lat}, Lon: ${lon}`);
           }
         });
-      };
-
-      reader.readAsArrayBuffer(file);
-    });
+      })
+      .catch(err => {
+        console.error("Failed to load Excel file:", err);
+        alert("Could not load location data.");
+      });
   </script>
 </body>
 </html>
