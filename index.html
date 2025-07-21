@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Excel to Map - WebGIS</title>
+  <title>Survey on Digital Agriculture</title>
   <meta charset="utf-8" />
   <style>
-    #map { height: 600px; width: 100%; margin-top: 10px; }
+    #map {  height: 100vh; width: 100%; margin-top: 10px; }
   </style>
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
-  <h2>Auto-Loaded Excel Points on Map</h2>
+  <h2 style="font-family: Calibri; color: #1b2e00;">Survey on Digital Agriculture - Survey Locations</h2>
   <div id="map"></div>
 
   <!-- Leaflet JS -->
@@ -26,7 +26,7 @@
     }).addTo(map);
 
     // Replace this URL with the raw GitHub file URL of your Excel file
-    const excelUrl = 'https://raw.githubusercontent.com/geraldrexhepi/basemap/main/locations.xlsx';
+    const excelUrl = 'https://github.com/geraldrexhepi/basemap/locations.xlsx';
 
     // Fetch the Excel file from GitHub
     fetch(excelUrl)
@@ -42,7 +42,12 @@
           const name = row.Name || "Unnamed Point";
 
           if (!isNaN(lat) && !isNaN(lon)) {
-            L.marker([lat, lon])
+            L.marker([lat, lon], {
+              radius: 5,
+              color: '#1b2e00',
+              fillColor: '#4CAF50',
+              fillOpacity: 0.8
+            })
               .addTo(map)
               .bindPopup(`<b>${name}</b><br>Lat: ${lat}, Lon: ${lon}`);
           }
