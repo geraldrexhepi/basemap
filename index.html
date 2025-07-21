@@ -42,7 +42,7 @@
           const name = row.Name || "Unnamed Point";
 
           if (!isNaN(lat) && !isNaN(lon)) {
-            L.marker([lat, lon], {
+            L.circleMarker([lat, lon], {
               radius: 5,
               color: '#1b2e00',
               fillColor: '#4CAF50',
