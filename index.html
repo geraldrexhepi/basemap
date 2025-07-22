@@ -11,6 +11,11 @@
 </head>
 <body>
   <h2 style="font-family: Calibri; color: #1b2e00;">Digital Agriculture - Survey Locations</h2>
+ 
+  <p style="font-family: Calibri; color: #1b2e00;">
+  Total Survey Locations: <span id="location-count">Loading...</span>
+  </p>
+  
   <div id="map"></div>
 
   <!-- Leaflet JS -->
@@ -36,22 +41,28 @@
         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(firstSheet);
 
-        jsonData.forEach(row => {
+        const validLocations = jsonData.filter(row => 
+          !isNaN(parseFloat(row.Latitude)) && !isNaN(parseFloat(row.Longitude))
+        );
+        
+        // Display count in HTML
+        document.getElementById('location-count').textContent = validLocations.length;
+        
+        // Add markers to the map
+        validLocations.forEach(row => {
           const lat = parseFloat(row.Latitude);
           const lon = parseFloat(row.Longitude);
           const name = row.Name || "Unnamed Point";
-
-          if (!isNaN(lat) && !isNaN(lon)) {
-            L.circleMarker([lat, lon], {
-              radius: 3.5,
-              fillColor: '#1b2e00',
-              fillOpacity: 1,
-              color: 'null',
-              weight: 0
-            })
-              .addTo(map)
-              .bindPopup(`<b>${name}</b><br>Lat: ${lat}, Lon: ${lon}`);
-          }
+        
+          L.circleMarker([lat, lon], {
+            radius: 3.5,
+            fillColor: '#1b2e00',
+            fillOpacity: 1,
+            color: null,  // fixed to be actual null
+            weight: 0
+          })
+          .addTo(map)
+          .bindPopup(`<b>${name}</b><br>Lat: ${lat}, Lon: ${lon}`);
         });
       })
       .catch(err => {
