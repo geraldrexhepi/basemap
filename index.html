@@ -33,14 +33,15 @@
     // Excel file URL
     const excelUrl = 'https://raw.githubusercontent.com/geraldrexhepi/basemap/main/locations.xlsx';
 
-    // Show last updated date
     async function updateLastModified() {
       try {
-        const response = await fetch(excelUrl, { method: 'HEAD' });
-        const lastModified = response.headers.get('Last-Modified');
-        if (lastModified) {
-          const date = new Date(lastModified);
-          document.getElementById('last-updated').textContent = date.toLocaleString(undefined, {
+        const apiUrl = 'https://api.github.com/repos/geraldrexhepi/basemap/commits?path=locations.xlsx&page=1&per_page=1';
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+    
+        if (Array.isArray(data) && data.length > 0) {
+          const commitDate = new Date(data[0].commit.committer.date);
+          document.getElementById('last-updated').textContent = commitDate.toLocaleString(undefined, {
             year: 'numeric',
             month: 'short',
             day: 'numeric',
@@ -51,7 +52,7 @@
           document.getElementById('last-updated').textContent = 'Unavailable';
         }
       } catch (err) {
-        console.error('Error fetching last modified date:', err);
+        console.error('GitHub API error:', err);
         document.getElementById('last-updated').textContent = 'Error';
       }
     }
