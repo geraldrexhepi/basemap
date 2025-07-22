@@ -4,7 +4,7 @@
   <title>Survey on Digital Agriculture</title>
   <meta charset="utf-8" />
   <style>
-    #map {  height: 80vh; width: 100%; margin-top: 10px; }
+    #map { height: 80vh; width: 100%; margin-top: 10px; }
   </style>
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -13,13 +13,13 @@
   <h2 style="font-family: Calibri; color: #1b2e00; font-weight: bold;">Digital Agriculture - Survey Locations</h2>
  
   <p style="font-family: Calibri; color: #1b2e00; font-weight: bold; font-size: 20px;">
-  Total Surveys:
+    Total Surveys:
     <span id="location-count" style="color: #e74c3c; font-weight: bold; font-size: 20px;">Loading...</span>
   </p>
   
   <p style="font-family: Courier New; color: #1b2e00; font-weight: bold; font-size: 16px;">
-  Last Updated:
-  <span id="last-updated" style="color: #007839; font-weight: bold;">Loading...</span>
+    Last Updated:
+    <span id="last-updated" style="color: #007839; font-weight: bold;">Loading...</span>
   </p>
   
   <div id="map"></div>
@@ -30,20 +30,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <script>
-    // Initialize Leaflet map
-    var map = L.map('map').setView([41.188200, 19.818670], 8);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    // Replace this URL with the raw GitHub file URL of your Excel file
+    // Excel file URL
     const excelUrl = 'https://raw.githubusercontent.com/geraldrexhepi/basemap/main/locations.xlsx';
 
-    // Fetch the Excel file from GitHub
-    fetch(excelUrl)
-      .then(response => response.arrayBuffer())
-      <script>
-      const excelUrl = 'https://raw.githubusercontent.com/geraldrexhepi/basemap/main/locations.xlsx';
     // Show last updated date
     async function updateLastModified() {
       try {
@@ -66,9 +55,19 @@
         document.getElementById('last-updated').textContent = 'Error';
       }
     }
-    updateLastModified(); // Call the function
-    </script>
-  
+
+    // Call the last-updated function
+    updateLastModified();
+
+    // Initialize Leaflet map
+    var map = L.map('map').setView([41.188200, 19.818670], 8);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Fetch Excel data
+    fetch(excelUrl)
+      .then(response => response.arrayBuffer())
       .then(arrayBuffer => {
         const workbook = XLSX.read(arrayBuffer, { type: 'array' });
         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -78,10 +77,10 @@
           !isNaN(parseFloat(row.Latitude)) && !isNaN(parseFloat(row.Longitude))
         );
         
-        // Display count in HTML
+        // Display count
         document.getElementById('location-count').textContent = validLocations.length;
         
-        // Add markers to the map
+        // Plot markers
         validLocations.forEach(row => {
           const lat = parseFloat(row.Latitude);
           const lon = parseFloat(row.Longitude);
@@ -91,7 +90,7 @@
             radius: 3.0,
             fillColor: '#e74c3c',
             fillOpacity: 1,
-            color: null,  // fixed to be actual null
+            color: null,
             weight: 0
           })
           .addTo(map)
