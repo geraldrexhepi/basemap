@@ -86,7 +86,7 @@
         validLocations.forEach(row => {
           const lat = parseFloat(row.Latitude);
           const lon = parseFloat(row.Longitude);
-          const name = row.Name || "Unnamed Point";
+          const name = row.key || "Unnamed Point";
         
           L.circleMarker([lat, lon], {
             radius: 3.0,
@@ -106,3 +106,4 @@
   </script>
 </body>
 </html>
+
