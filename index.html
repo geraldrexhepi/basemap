@@ -131,9 +131,7 @@
     }
 
     // Load GeoJSON layers from GitHub
-    loadGeoJSONLayer('https://raw.githubusercontent.com/geraldrexhepi/basemap/main/fastest.geojson', {
-      color: '#C76B00', weight: 2, fillOpacity: 0.3
-    });
+
 
     fetch('https://raw.githubusercontent.com/geraldrexhepi/basemap/main/city.geojson')
   .then(response => response.json())
@@ -141,8 +139,8 @@
     L.geoJSON(data, {
       pointToLayer: function (feature, latlng) {
         return L.circleMarker(latlng, {
-          radius: 3.0,
-          fillColor: '#009629',
+          radius: 4.0,
+          fillColor: '#4FD100',
           fillOpacity: 1,
           color: null,
           weight: 0
@@ -162,8 +160,12 @@
   .catch(error => {
     console.error("Failed to load city.geojson:", error);
   });
-
+    
+  loadGeoJSONLayer('https://raw.githubusercontent.com/geraldrexhepi/basemap/main/fastest.geojson', {
+    color: '#FFCC29', weight: 2, fillOpacity: 0.3
+  });
   </script>
 </body>
 </html>
+
 
