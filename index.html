@@ -70,7 +70,35 @@
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Load Excel (survey) data
+    // Function to load generic GeoJSON layer with polygon/line style
+    function loadGeoJSONLayer(url, styleOptions) {
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          L.geoJSON(data, {
+            style: styleOptions,
+            onEachFeature: function (feature, layer) {
+              if (feature.properties) {
+                let popupContent = '';
+                for (const key in feature.properties) {
+                  popupContent += `<strong>${key}:</strong> ${feature.properties[key]}<br>`;
+                }
+                layer.bindPopup(popupContent);
+              }
+            }
+          }).addTo(map);
+        })
+        .catch(error => {
+          console.error("Failed to load GeoJSON:", error);
+        });
+    }
+
+    //Load fastest.geojson FIRST (below others)
+    loadGeoJSONLayer('https://raw.githubusercontent.com/geraldrexhepi/basemap/main/fastest.geojson', {
+      color: '#BF8524', weight: 2, fillOpacity: 0.3
+    });
+
+    //Load Excel (survey) data AFTER (above fastest.geojson)
     fetch(excelUrl)
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => {
@@ -107,65 +135,34 @@
         alert("Could not load location data.");
       });
 
-    // Function to load GeoJSON layer
-    function loadGeoJSONLayer(url, styleOptions) {
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          L.geoJSON(data, {
-            style: styleOptions,
-            onEachFeature: function (feature, layer) {
-              if (feature.properties) {
-                let popupContent = '';
-                for (const key in feature.properties) {
-                  popupContent += `<strong>${key}:</strong> ${feature.properties[key]}<br>`;
-                }
-                layer.bindPopup(popupContent);
-              }
-            }
-          }).addTo(map);
-        })
-        .catch(error => {
-          console.error("Failed to load GeoJSON:", error);
-        });
-    }
-
-    // Load GeoJSON layers from GitHub
-
-
+    //Load city.geojson AFTER (above fastest.geojson)
     fetch('https://raw.githubusercontent.com/geraldrexhepi/basemap/main/city.geojson')
-  .then(response => response.json())
-  .then(data => {
-    L.geoJSON(data, {
-      pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, {
-          radius: 4.0,
-          fillColor: '#4FD100',
-          fillOpacity: 1,
-          color: null,
-          weight: 0
-        });
-      },
-      onEachFeature: function (feature, layer) {
-        if (feature.properties) {
-          let popupContent = '';
-          for (const key in feature.properties) {
-            popupContent += `<strong>${key}:</strong> ${feature.properties[key]}<br>`;
+      .then(response => response.json())
+      .then(data => {
+        L.geoJSON(data, {
+          pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, {
+              radius: 4.5,
+              fillColor: '#009415',
+              fillOpacity: 1,
+              color: null,
+              weight: 0
+            });
+          },
+          onEachFeature: function (feature, layer) {
+            if (feature.properties) {
+              let popupContent = '';
+              for (const key in feature.properties) {
+                popupContent += `<strong>${key}:</strong> ${feature.properties[key]}<br>`;
+              }
+              layer.bindPopup(popupContent);
+            }
           }
-          layer.bindPopup(popupContent);
-        }
-      }
-    }).addTo(map);
-  })
-  .catch(error => {
-    console.error("Failed to load city.geojson:", error);
-  });
-    
-  loadGeoJSONLayer('https://raw.githubusercontent.com/geraldrexhepi/basemap/main/fastest.geojson', {
-    color: '#FFCC29', weight: 2, fillOpacity: 0.3
-  });
+        }).addTo(map);
+      })
+      .catch(error => {
+        console.error("Failed to load city.geojson:", error);
+      });
   </script>
 </body>
 </html>
-
-
