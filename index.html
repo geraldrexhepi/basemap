@@ -11,17 +11,17 @@
 </head>
 <body>
   <h2 style="font-family: Calibri; color: #1b2e00; font-weight: bold;">Digital Agriculture - Survey Locations</h2>
- 
+
   <p style="font-family: Calibri; color: #1b2e00; font-weight: bold; font-size: 20px;">
     Total Surveys:
     <span id="location-count" style="color: #e74c3c; font-weight: bold; font-size: 20px;">Loading...</span>
   </p>
-  
+
   <p style="font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #1b2e00; font-size: 16px;">
     Last updated:
-    <span id="last-updated" style="'Courier New', Courier, monospace; font-weight: bold; color: #007839; font-weight: bold;">Loading...</span>
+    <span id="last-updated" style="'Courier New', Courier, monospace; font-weight: bold; color: #007839;">Loading...</span>
   </p>
-  
+
   <div id="map"></div>
 
   <!-- Leaflet JS -->
@@ -33,12 +33,13 @@
     // Excel file URL
     const excelUrl = 'https://raw.githubusercontent.com/geraldrexhepi/basemap/main/locations.xlsx';
 
+    // Function to update last modified date from GitHub API
     async function updateLastModified() {
       try {
         const apiUrl = 'https://api.github.com/repos/geraldrexhepi/basemap/commits?path=locations.xlsx&page=1&per_page=1';
         const response = await fetch(apiUrl);
         const data = await response.json();
-    
+
         if (Array.isArray(data) && data.length > 0) {
           const commitDate = new Date(data[0].commit.committer.date);
           document.getElementById('last-updated').textContent = commitDate.toLocaleString(undefined, {
@@ -58,16 +59,18 @@
       }
     }
 
-    // Call the last-updated function
+    // Call last-updated function
     updateLastModified();
 
     // Initialize Leaflet map
     var map = L.map('map').setView([41.188200, 19.818670], 8);
+
+    // Add base map layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Fetch Excel data
+    // Load Excel (survey) data
     fetch(excelUrl)
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => {
@@ -75,19 +78,19 @@
         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(firstSheet);
 
-        const validLocations = jsonData.filter(row => 
+        const validLocations = jsonData.filter(row =>
           !isNaN(parseFloat(row.Latitude)) && !isNaN(parseFloat(row.Longitude))
         );
-        
+
         // Display count
         document.getElementById('location-count').textContent = validLocations.length;
-        
-        // Plot markers
+
+        // Plot survey markers
         validLocations.forEach(row => {
           const lat = parseFloat(row.Latitude);
           const lon = parseFloat(row.Longitude);
           const name = row.key || "Unnamed Point";
-        
+
           L.circleMarker([lat, lon], {
             radius: 3.0,
             fillColor: '#e74c3c',
@@ -103,8 +106,39 @@
         console.error("Failed to load Excel file:", err);
         alert("Could not load location data.");
       });
+
+    // Function to load GeoJSON layer
+    function loadGeoJSONLayer(url, styleOptions) {
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          L.geoJSON(data, {
+            style: styleOptions,
+            onEachFeature: function (feature, layer) {
+              if (feature.properties) {
+                let popupContent = '';
+                for (const key in feature.properties) {
+                  popupContent += `<strong>${key}:</strong> ${feature.properties[key]}<br>`;
+                }
+                layer.bindPopup(popupContent);
+              }
+            }
+          }).addTo(map);
+        })
+        .catch(error => {
+          console.error("Failed to load GeoJSON:", error);
+        });
+    }
+
+    // Load GeoJSON layers from GitHub
+    loadGeoJSONLayer('https://raw.githubusercontent.com/geraldrexhepi/basemap/main/city.geojson', {
+      color: '#FF9E00', weight: 2, fillOpacity: 0.3
+    });
+
+    loadGeoJSONLayer('https://raw.githubusercontent.com/geraldrexhepi/basemap/main/fastest.geojson', {
+      color: '#75FFB8', weight: 2, fillOpacity: 0.3
+    });
+
   </script>
 </body>
 </html>
-
-
