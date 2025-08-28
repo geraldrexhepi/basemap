@@ -4,8 +4,29 @@
   <title>Survey on Digital Agriculture</title>
   <meta charset="utf-8" />
   <style>
-    #map { height: 80vh; width: 100%; margin-top: 10px; }
+    #custom-legend {
+      margin-top: 10px;
+      margin-left: 0;
+      font-family: Calibri;
+      font-size: 14px;
+      color: #131313;
+    }
+  
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+  
+    .legend-line {
+      width: 30px;
+      height: 4px;
+      background: #FCFCFC;
+      border-radius: 2px;
+    }
   </style>
+
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
@@ -16,6 +37,14 @@
     Total Surveys:
     <span id="location-count" style="color: #e74c3c; font-weight: bold; font-size: 20px;">Loading...</span>
   </p>
+  
+  <div id="custom-legend">
+    <div class="legend-item">
+      <div class="legend-line" style="background: #333333;"></div>
+      <span>Fastest route</span>
+    </div>
+  </div>
+  
 
   <p style="font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #1b2e00; font-size: 16px;">
     Last updated:
@@ -191,6 +220,7 @@ legend.addTo(map);
   </script>
 </body>
 </html>
+
 
 
 
