@@ -70,7 +70,7 @@
       attribution: '&copy; OpenStreetMap contributors'
     })
     
-    baseLayer.setOpacity(0.5);
+    baseLayer.setOpacity(0.6);
       
     baseLayer.addTo(map);
 
@@ -124,7 +124,7 @@
           const name = row.key || "Unnamed Point";
 
           L.circleMarker([lat, lon], {
-            radius: 3.0,
+            radius: 2.5,
             fillColor: '#e74c3c',
             fillOpacity: 1,
             color: null,
@@ -146,7 +146,7 @@
         L.geoJSON(data, {
           pointToLayer: function (feature, latlng) {
             return L.circleMarker(latlng, {
-              radius: 4.0,
+              radius: 3.5,
               fillColor: '#009415',
               fillOpacity: 1,
               color: null,
@@ -170,6 +170,7 @@
   </script>
 </body>
 </html>
+
 
 
 
