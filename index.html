@@ -104,7 +104,7 @@
       attribution: '&copy; OpenStreetMap contributors'
     })
     
-    baseLayer.setOpacity(0.6);
+    baseLayer.setOpacity(0.5);
       
     baseLayer.addTo(map);
 
@@ -133,7 +133,7 @@
 
     //Load fastest.geojson FIRST (below others)
     loadGeoJSONLayer('https://raw.githubusercontent.com/geraldrexhepi/basemap/main/fastest.geojson', {
-      color: '#333333', weight: 1.0, opacity: 0.5, fillColor: '#333333', fillOpacity: 0.5
+      color: '#333333', weight: 1.0, opacity: 0.6, fillColor: '#333333', fillOpacity: 0.6
     });
 
     //Load Excel (survey) data AFTER (above fastest.geojson)
@@ -201,40 +201,7 @@
       .catch(error => {
         console.error("Failed to load city.geojson:", error);
       });
-  
-    
-    // Add a custom legend
-const legend = L.control({ position: 'bottomright' });
-
-legend.onAdd = function (map) {
-  const div = L.DomUtil.create('div', 'info legend');
-
-  // Add a line symbol and label
-  div.innerHTML += `
-    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-      <div style="width: 30px; height: 4px; background: #FFCC29;"></div>
-      <span style="font-family: Calibri; font-size: 14px;">Fastest route</span>
-    </div>
-  `;
-
-  return div;
-};
-
-legend.addTo(map);
     
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
