@@ -4,95 +4,118 @@
   <title>Survey on Digital Agriculture</title>
   <meta charset="utf-8" />
   <style>
-    #map {
-      height: 80vh;
-      width: 100%;
-      margin-top: 10px;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
+
+    html, body {
+      height: 100vh;
+      overflow: hidden;
+      font-family: Calibri, sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 10px 15px;
+      background-color: #f8f8f8;
+    }
+
     #custom-legend {
       margin-top: 10px;
-      margin-left: 0;
-      font-family: Calibri;
       font-size: 14px;
       color: #131313;
-
       background-color: #F0F0F0;
-      padding: 5px 10px;
+      padding: 7px 12px;
       border-radius: 3px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
       width: fit-content;
     }
-  
+
     .legend-item {
       display: flex;
       align-items: center;
       gap: 6px;
       margin-bottom: 4px;
     }
-  
+
     .legend-line {
       width: 30px;
       height: 4px;
       background: #FCFCFC;
       border-radius: 2px;
     }
-    
+
     .city-legend-point {
       width: 10px;
       height: 10px;
       border-radius: 50%;
       background: #009415;
     }
-    
+
     .survey-legend-point {
       width: 10px;
       height: 10px;
       border-radius: 50%;
       background: #e74c3c;
     }
-    
+
+    #content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #map {
+      flex: 1;
+      width: 100%;
+    }
   </style>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
-  <h2 style="font-family: Calibri; color: #1b2e00; font-weight: bold;">Digital Agriculture - Survey Locations</h2>
 
-  <p style="font-family: Calibri; color: #1b2e00; font-weight: bold; font-size: 18px;">
+<header>
+  <h2 style="color: #1b2e00; font-weight: bold;">Digital Agriculture - Survey Locations</h2>
+
+  <p style="color: #1b2e00; font-weight: bold; font-size: 18px;">
     Total Surveys:
-    <span id="location-count" style="color: #e74c3c; font-weight: bold; font-size: 18px;">Loading...</span>
+    <span id="location-count" style="color: #e74c3c;">Loading...</span>
   </p>
-  
+
   <div id="custom-legend">
+    <!-- Combine all legend items into one container -->
     <div class="legend-item">
       <div class="legend-line" style="background: #333333;"></div>
-      <span style="font-family: Calibri; color: #1b2e00; font-weight: bold; font-size: 16px;">
-        fastest route to closest city
-      </span>
+      <span>fastest route to closest city</span>
     </div>
-
     <div class="legend-item">
       <div class="city-legend-point"></div>
-      <span style="font-family: Calibri; color: #1b2e00; font-weight: bold; font-size: 16px;">
-        closest city
-      </span>
+      <span>closest city</span>
     </div>
-
     <div class="legend-item">
       <div class="survey-legend-point"></div>
-      <span style="font-family: Calibri; color: #1b2e00; font-weight: bold; font-size: 16px;">
-      location of interview
-      </span>
+      <span>location of interview</span>
     </div>
   </div>
-    
-  <p style="font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #1b2e00; font-size: 16px;">
+
+  <p style="font-family: 'Courier New', monospace; font-weight: bold; color: #1b2e00; font-size: 16px;">
     Last updated:
-    <span id="last-updated" style="'Courier New', Courier, monospace; font-weight: bold; color: #007839;">Loading...</span>
+    <span id="last-updated" style="color: #007839;">Loading...</span>
   </p>
 
+</header>
+
+<div id="content">
   <div id="map"></div>
+</div>
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -242,6 +265,7 @@
   </script>
 </body>
 </html>
+
 
 
 
