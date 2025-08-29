@@ -31,11 +31,18 @@
       border-radius: 2px;
     }
     
-    .legend-point {
+    .city-legend-point {
       width: 10px;
       height: 10px;
       border-radius: 50%;
       background: #009415;
+    }
+    
+    .survey-legend-point {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #e74c3c;
     }
     
   </style>
@@ -53,18 +60,25 @@
   
   <div id="custom-legend">
     <div class="legend-item">
-      <span style="font-family: Calibri; color: #1b2e00; font-weight: bold; font-size: 18px;">
-        Fastest route to closest city
-      </span>
       <div class="legend-line" style="background: #333333;"></div>
+      <span style="font-family: Calibri; color: #1b2e00; font-weight: bold; font-size: 18px;">
+        fastest route to closest city
+      </span>
     </div>
   </div>
   
   <div class="legend-item">
+    <div class="city-legend-point"></div>
     <span style="font-family: Calibri; color: #1b2e00; font-weight: bold; font-size: 18px;">
-      Closest city
+      closest city
     </span>
-    <div class="legend-point"></div>
+  </div>
+
+  <div class="legend-item">
+    <div class="survey-legend-point"></div>
+    <span style="font-family: Calibri; color: #1b2e00; font-weight: bold; font-size: 18px;">
+    location of interview
+    </span>
   </div>
 
   <p style="font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #1b2e00; font-size: 16px;">
@@ -222,6 +236,7 @@
   </script>
 </body>
 </html>
+
 
 
 
