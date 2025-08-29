@@ -30,6 +30,14 @@
       background: #FCFCFC;
       border-radius: 2px;
     }
+    
+    .legend-point {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #009415;
+    }
+    
   </style>
 
   <!-- Leaflet CSS -->
@@ -45,11 +53,19 @@
   
   <div id="custom-legend">
     <div class="legend-item">
-      <span style="font-family: Calibri; color: #1b2e00; font-weight: bold; font-size: 18px;">Fastest route</span>
+      <span style="font-family: Calibri; color: #1b2e00; font-weight: bold; font-size: 18px;">
+        Fastest route to closest city
+      </span>
       <div class="legend-line" style="background: #333333;"></div>
     </div>
   </div>
   
+  <div class="legend-item">
+    <span style="font-family: Calibri; color: #1b2e00; font-weight: bold; font-size: 18px;">
+      Closest city
+    </span>
+    <div class="legend-point"></div>
+  </div>
 
   <p style="font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #1b2e00; font-size: 16px;">
     Last updated:
@@ -206,6 +222,7 @@
   </script>
 </body>
 </html>
+
 
 
 
